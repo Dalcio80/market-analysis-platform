@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+
+# VS Code
+.vscode/
+
+# File temporanei
+test.py
+test2.py
+fix_sectors.py
+
+# Dati — gestiti da GitHub Actions
+# data/*.csv   <- commentato: vogliamo tenere i CSV nel repo

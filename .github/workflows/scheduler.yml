@@ -1,0 +1,47 @@
+name: Daily Market Data Update
+
+on:
+  schedule:
+    - cron: '0 7 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Insider Buying script
+        run: python modules/insider_buying.py
+
+      - name: Commit and push updated data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/
+          git diff --staged --quiet || git commit -m 'Auto-update market data'
+          git push
+```
+
+Salva con **Ctrl+S**, poi aggiorna anche `requirements.txt` aggiungendo `httpx` e `beautifulsoup4` che abbiamo aggiunto ma non erano nella lista originale:
+```
+pandas>=2.0.0
+requests>=2.31.0
+streamlit>=1.35.0
+plotly>=5.18.0
+yfinance>=0.2.40
+httpx>=0.27.0
+beautifulsoup4>=4.12.0
